@@ -28,12 +28,21 @@ exports.create = (text, callback) => {
 
 
 };
-
+// items = [000.txt, 001.txt, 002.txt]
+// [000, 001, 002]
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
-  });
-  callback(null, data);
+
+  fs.readdir(exports.dataDir, function (err, files) {
+    if (err) {
+      console.log(err)
+    } else {
+      var array = _.map(files, function (file, id) {
+        return file.split('.')[0]
+      })
+    }
+    callback(err, array);
+  })
+
 };
 
 exports.readOne = (id, callback) => {
