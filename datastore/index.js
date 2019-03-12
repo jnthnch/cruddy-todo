@@ -29,39 +29,59 @@ exports.create = (text, callback) => {
 
 };
 // items = [000.txt, 001.txt, 002.txt]
-// [000, 001, 002]
+// [{id:000, text:text}, 001, 002]
 exports.readAll = (callback) => {
 
   fs.readdir(exports.dataDir, function (err, files) {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
-      var array = _.map(files, function (file, id) {
-        return file.split('.')[0]
-      })
+      var array = _.map(files, function (file) {
+        return file.split('.')[0];
+      });
     }
     callback(err, array);
-  })
+  });
 
 };
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
-};
+  fs.access(exports.dataDir + `/${id}.txt`, function (err) {
+    if (err) {
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      fs.readFile(exports.dataDir + `/${id}.txt`, (err, data) => {
+        if (err) {
+          callback(new Error(`No item with id: ${id}`));
+        } else {
+          callback(null, { id, text: data.toString() });
+        }
+      })
+    }
+  });
+}
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  fs.access(exports.dataDir + `/${id}.txt`, function (err) {
+    if (err) {
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      fs.readFile(exports.dataDir + `/${id}.txt`, (err, data) => {
+        if (err) {
+          callback(new Error(`No item with id: ${id}`));
+        } else {
+          callback(null, { id, text: data.toString() });
+        }
+      })
+    }
+  });
+  // var item = items[id];
+  // if (!item) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   items[id] = text;
+  //   callback(null, { id, text });
+  // }
 };
 
 exports.delete = (id, callback) => {
