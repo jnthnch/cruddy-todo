@@ -8,9 +8,25 @@ var items = {};
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  counter.getNextUniqueId((err, data) => { callback(err, { data, text }) });
-  // items[id] = text;
-  exports.dataDir(__dirname, text)
+
+  counter.getNextUniqueId((err, data) => {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      fs.writeFile(`${exports.dataDir}/${data}.txt`, text, function (err) {
+        if (err) {
+          console.log(err);
+          return;
+        } else {
+          callback(null, { id: data, text: text });
+        }
+      });
+    }
+
+  });
+
+
 };
 
 exports.readAll = (callback) => {
@@ -49,6 +65,8 @@ exports.delete = (id, callback) => {
     callback();
   }
 };
+
+
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 
