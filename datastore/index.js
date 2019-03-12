@@ -56,10 +56,10 @@ exports.readOne = (id, callback) => {
         } else {
           callback(null, { id, text: data.toString() });
         }
-      })
+      });
     }
   });
-}
+};
 
 exports.update = (id, text, callback) => {
   fs.access(exports.dataDir + `/${id}.txt`, function (err) {
@@ -72,7 +72,7 @@ exports.update = (id, text, callback) => {
         } else {
           callback(null, { id, text: data.toString() });
         }
-      })
+      });
     }
   });
   // var item = items[id];
